@@ -34,3 +34,5 @@ Stačí spustit soubor Program.cs v Visual Studiu a program by měl být funkčn
 ## Návod k použití
 
 Po spuštění se zobrazí menu s možnostmi. Stačí zvolit požadovanou funkci stisknutím odpovídajícího tlačítka na klávesnici a postupovat dle pokynů v konzoli.
+
+![Náhled Programu](nahled_programu.png)
