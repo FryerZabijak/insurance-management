@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsolePojistky
 {
+    [Serializable]
     internal class ClassOsoba
     {
         string jmeno;
@@ -14,8 +15,13 @@ namespace ConsolePojistky
 
         public ClassOsoba(string jmeno, string prijmeni)
         {
-            this.jmeno= jmeno;
-            this.prijmeni= prijmeni;
+            this.jmeno = jmeno;
+            this.prijmeni = prijmeni;
+        }
+
+        public override string ToString()
+        {
+            return CeleJmeno;
         }
     }
 }

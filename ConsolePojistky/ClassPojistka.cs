@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace ConsolePojistky
 {
+    [Serializable]
     internal class ClassPojistka
     {
         string _cisloPojistky;
-        List<ClassOsoba> _seznamPojistitelu;
+        ClassOsoba _pojistitel;
         int _cilovaCastka;
         public string CisloPojistky
         {
@@ -35,8 +36,13 @@ namespace ConsolePojistky
             if (pojistitel == null) throw new ArgumentNullException("Pojistitel nesmí být prázdný");
 
             _cisloPojistky = cisloPojistky;
-            _seznamPojistitelu.Add(pojistitel);
+            _pojistitel = pojistitel;
             _cilovaCastka = cilovaCastka;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("Pojistka {0} - {1} CZK", CisloPojistky, CilovaCastka);
         }
     }
 }
