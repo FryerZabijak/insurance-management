@@ -9,7 +9,7 @@ namespace ConsolePojistky
     internal class ClassPojistka
     {
         string _cisloPojistky;
-        ClassOsoba _pojistitel;
+        List<ClassOsoba> _seznamPojistitelu;
         int _cilovaCastka;
         public string CisloPojistky
         {
@@ -35,7 +35,7 @@ namespace ConsolePojistky
             if (pojistitel == null) throw new ArgumentNullException("Pojistitel nesmí být prázdný");
 
             _cisloPojistky = cisloPojistky;
-            _pojistitel = pojistitel;
+            _seznamPojistitelu.Add(pojistitel);
             _cilovaCastka = cilovaCastka;
         }
     }
