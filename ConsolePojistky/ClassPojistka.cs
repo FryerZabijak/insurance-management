@@ -44,6 +44,42 @@ namespace ConsolePojistky
             _cilovaCastka = cilovaCastka;
         }
 
+        public static ClassPojistka VratPojistku()
+        {
+            ClassOsoba pojistitel = ClassOsoba.VratOsobu("Pojistitel");
+
+            string cisloPojistky = KontrolorVstupu.ZadavaniOdUzivatele("Číslo Pojistky", "Minimálně 5 znaků", KontrolorVstupu.KontrolaDelky5);
+            int cilovaCastka = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Cílová částka", "Musí být číslo, vyplněná a kladná", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla, KontrolorVstupu.KontrolaKladnosti));
+            ClassPojistka pojistka = new ClassPojistka(cisloPojistky, pojistitel, cilovaCastka);
+
+            return pojistka;
+        }
+
+        public static void VypisPojistky(dynamic seznamPojistek)
+        {
+            int index = 0;
+            foreach (KeyValuePair<ClassPojistka, List<ClassOsoba>> pojistka in seznamPojistek)
+            {
+                Console.WriteLine("{0}. {1}", (++index), pojistka.Key);
+            }
+        }
+
+        public static bool KontrolaNeprazdnostiPojistek(Dictionary<ClassPojistka, List<ClassOsoba>> seznamPojistek)
+        {
+            if (seznamPojistek.Count <= 0) return false;
+            return true;
+        }
+
+        public static Dictionary<ClassPojistka, List<ClassOsoba>> VratPojistkuElement(int index, Dictionary<ClassPojistka, List<ClassOsoba>> seznamPojistek)
+        {
+            ClassPojistka klic = seznamPojistek.ElementAt(index).Key;
+            List<ClassOsoba> hodnota = seznamPojistek.ElementAt(index).Value;
+            Dictionary<ClassPojistka, List<ClassOsoba>> element = new Dictionary<ClassPojistka, List<ClassOsoba>>
+            {
+                { klic, hodnota }
+            };
+            return element;
+        }
         public override string ToString()
         {
             return String.Format("Pojistka {0} - {1} CZK", CisloPojistky, CilovaCastka);

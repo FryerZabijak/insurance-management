@@ -19,6 +19,7 @@ namespace ConsolePojistky
         static void Main(string[] args)
         {
             bool chod_programu = true;
+
             while (chod_programu)
             {
                 Console.Clear();
@@ -29,24 +30,29 @@ namespace ConsolePojistky
                 {
                     case '1':
                         {
-                            ClassPojistka pojistka = VratPojistku();
-                            ClassOsoba pojisteny = VratOsobu("Pojištěný");
+                            ClassPojistka pojistka = ClassPojistka.VratPojistku();
+                            ClassOsoba pojisteny = ClassOsoba.VratOsobu("Pojištěný");
                             seznamPojistek.Add(pojistka, new List<ClassOsoba> { pojisteny });
                         }
                         break;
                     case '2':
                         {
-                            if (!KontrolaPrazdnostiPojistek(seznamPojistek)) break;
+                            if (!ClassPojistka.KontrolaNeprazdnostiPojistek(seznamPojistek))
+                            {
+                                Console.WriteLine("Nejsou vytvořeny žádné pojistky");
+                                Pokracovani();
+                                break;
+                            }
 
-                            VypisPojistky(seznamPojistek);
+                            ClassPojistka.VypisPojistky(seznamPojistek);
 
                             int index = 0;
                             do
                             {
                                 index = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla)) - 1;
-                            } while (!ZkontrolujPlatnostIndexu(index, seznamPojistek.Count));
+                            } while (!KontrolorVstupu.ZkontrolujPlatnostIndexu(index, seznamPojistek.Count));
                             
-                            Dictionary < ClassPojistka, List<ClassOsoba>> pojistka = VratPojistkuElement(index, seznamPojistek);
+                            Dictionary < ClassPojistka, List<ClassOsoba>> pojistka = ClassPojistka.VratPojistkuElement(index, seznamPojistek);
 
                             foreach (KeyValuePair<ClassPojistka, List<ClassOsoba>> p in pojistka)
                             {
@@ -56,7 +62,7 @@ namespace ConsolePojistky
                                 if (seznamPojistek.ContainsKey(klic))
                                 {
                                     List<ClassOsoba> h = seznamPojistek[klic];
-                                    hodnota.Add(VratOsobu("Nový Pojištěněc"));
+                                    hodnota.Add(ClassOsoba.VratOsobu("Nový Pojištěněc"));
                                     seznamPojistek[klic] = hodnota;
                                 }
                                 Console.WriteLine("\nNový pojištěnec byl úspěšně přidán do Pojistky " +klic);
@@ -67,24 +73,34 @@ namespace ConsolePojistky
                         break;
                     case '3':
                         {
-                            if (!KontrolaPrazdnostiPojistek(seznamPojistek)) break;
+                            if (!ClassPojistka.KontrolaNeprazdnostiPojistek(seznamPojistek))
+                            {
+                                Console.WriteLine("Nejsou vytvořeny žádné pojistky");
+                                Pokracovani();
+                                break;
+                            }
 
-                            VypisPojistky(seznamPojistek);
+                            ClassPojistka.VypisPojistky(seznamPojistek);
                             Pokracovani();
                         }
                         break;
                     case '4':
                         {
-                            if (!KontrolaPrazdnostiPojistek(seznamPojistek)) break;
+                            if (!ClassPojistka.KontrolaNeprazdnostiPojistek(seznamPojistek))
+                            {
+                                Console.WriteLine("Nejsou vytvořeny žádné pojistky");
+                                Pokracovani();
+                                break;
+                            }
 
-                            VypisPojistky(seznamPojistek);
+                            ClassPojistka.VypisPojistky(seznamPojistek);
 
                             int index = 0;
                             do {
                                 index = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla)) - 1;
-                            } while (!ZkontrolujPlatnostIndexu(index, seznamPojistek.Count));
+                            } while (!KontrolorVstupu.ZkontrolujPlatnostIndexu(index, seznamPojistek.Count));
 
-                                Dictionary < ClassPojistka, List<ClassOsoba>> pojistka = VratPojistkuElement(index, seznamPojistek);
+                                Dictionary < ClassPojistka, List<ClassOsoba>> pojistka = ClassPojistka.VratPojistkuElement(index, seznamPojistek);
                             Console.WriteLine("Pojistitel: {0}\n" +
                                 "Číslo Pojistky: {1}\n" +
                                 "Cílová Čáska: {2} CZK", 
@@ -115,27 +131,7 @@ namespace ConsolePojistky
             Pokracovani();
         }
 
-        static bool ZkontrolujPlatnostIndexu(int index, int delkaPole)
-        {
-            if (!KontrolorVstupu.KontrolaNeprazdnosti(index.ToString())) return false;
-            if (!KontrolorVstupu.KontrolaCisla(index.ToString())) return false;
-            if (index<0) return false;
-            if (!KontrolorVstupu.ZkontrolujDelku(index,delkaPole)) return false;
-            return true;
-        }
-
-        static bool KontrolaPrazdnostiPojistek(Dictionary<ClassPojistka, List<ClassOsoba>> seznamPojistek)
-        {
-            if (seznamPojistek.Count<=0)
-            {
-                Console.WriteLine("Nejsou vytvořené žádné pojistky");
-                Pokracovani();
-                return false;
-            }
-            return true;
-        }
-
-        static void Pokracovani()
+        public static void Pokracovani()
         {
             Console.WriteLine("\nStiskněte Enter pro pokračování...");
             Console.ReadLine();
@@ -163,14 +159,14 @@ namespace ConsolePojistky
                         do
                         {
                             index_souboru = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Číslo názvu souboru pro uložení", "Nesmí být prázdný, číslo", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla)) - 1;
-                        } while (ZkontrolujPlatnostIndexu(index_souboru, finalNazvy.Count));
+                        } while (KontrolorVstupu.ZkontrolujPlatnostIndexu(index_souboru, finalNazvy.Count));
 
                         nazev_souboru = finalNazvy[index_souboru];
                     }
                     break;
                 case 2:
                     {
-                        nazev_souboru = KontrolorVstupu.ZadavaniOdUzivatele("Název souboru pro uložení", "Nesmí být prázdný", KontrolorVstupu.KontrolaNeprazdnosti);
+                        nazev_souboru = KontrolorVstupu.ZadavaniOdUzivatele("Název souboru pro uložení", "Nesmí být prázdný, Dodržujte prosím správné pojmenování souborů ve svém operačním systému", KontrolorVstupu.KontrolaNeprazdnosti);
                     }
                     break;
                 default:
@@ -187,9 +183,6 @@ namespace ConsolePojistky
             Console.WriteLine("Data byla úspěšně uložena do souboru {0}.dat",nazev_souboru);
             Pokracovani();
         }
-
-
-
         static Dictionary<ClassPojistka, List<ClassOsoba>> Nacti()
         {
             List<string> finalNazvy = VypisSoubory(Directory.GetCurrentDirectory(),pripona:"dat");
@@ -227,50 +220,6 @@ namespace ConsolePojistky
             }
             return finalNazvy;
         }
-
-        static ClassPojistka VratPojistku()
-        {
-            ClassOsoba pojistitel = VratOsobu("Pojistitel");
-
-            string cisloPojistky = KontrolorVstupu.ZadavaniOdUzivatele("Číslo Pojistky", "Minimálně 5 znaků", KontrolorVstupu.KontrolaDelky5);
-            int cilovaCastka = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Cílová částka", "Musí být číslo, vyplněná a kladná", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla, KontrolorVstupu.KontrolaKladnosti));
-            ClassPojistka pojistka = new ClassPojistka(cisloPojistky, pojistitel, cilovaCastka);
-
-            return pojistka;
-        }
-
-        static ClassOsoba VratOsobu(string kdo="")
-        {
-            string jmeno = KontrolorVstupu.ZadavaniOdUzivatele(kdo + " Jméno", "Nesmí být prázdné", KontrolorVstupu.KontrolaNeprazdnosti);
-            string prijemni= KontrolorVstupu.ZadavaniOdUzivatele(kdo + " Příjmení", "Nesmí být prázdné", KontrolorVstupu.KontrolaNeprazdnosti);
-            ClassOsoba osoba = new ClassOsoba(jmeno, prijemni);
-            return osoba;
-        }
-
-        static void VypisPojistky(dynamic seznamPojistek)
-        {
-            int index = 0;
-            foreach (KeyValuePair<ClassPojistka,List<ClassOsoba>> pojistka in seznamPojistek)
-            {
-                Console.WriteLine("{0}. {1}", (++index), pojistka.Key);
-            }
-        }
-
-        static Dictionary<ClassPojistka, List<ClassOsoba>> VratPojistkuElement(int index, Dictionary<ClassPojistka, List<ClassOsoba>> seznamPojistek)
-        {
-            ClassPojistka klic = seznamPojistek.ElementAt(index).Key;
-            List <ClassOsoba> hodnota = seznamPojistek.ElementAt(index).Value;
-            Dictionary<ClassPojistka, List<ClassOsoba>> element = new Dictionary<ClassPojistka, List<ClassOsoba>>
-            {
-                { klic, hodnota }
-            };
-            return element;
-        }
-
-
-
-
-
 
         static void NapisMenu()
         {

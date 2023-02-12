@@ -19,6 +19,14 @@ namespace ConsolePojistky
             this.prijmeni = prijmeni;
         }
 
+        public static ClassOsoba VratOsobu(string kdo = "")
+        {
+            string jmeno = KontrolorVstupu.ZadavaniOdUzivatele(kdo + " Jméno", "Nesmí být prázdné", KontrolorVstupu.KontrolaNeprazdnosti);
+            string prijemni = KontrolorVstupu.ZadavaniOdUzivatele(kdo + " Příjmení", "Nesmí být prázdné", KontrolorVstupu.KontrolaNeprazdnosti);
+            ClassOsoba osoba = new ClassOsoba(jmeno, prijemni);
+            return osoba;
+        }
+
         public override string ToString()
         {
             return CeleJmeno;

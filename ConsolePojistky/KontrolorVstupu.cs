@@ -75,6 +75,14 @@ namespace ConsolePojistky
             return vstup;
         }
 
+        public static bool ZkontrolujPlatnostIndexu(int index, int delkaPole)
+        {
+            if (!KontrolaNeprazdnosti(index.ToString())) return false;
+            if (!KontrolaCisla(index.ToString())) return false;
+            if (index < 0) return false;
+            if (!ZkontrolujDelku(index, delkaPole)) return false;
+            return true;
+        }
 
 
     }
