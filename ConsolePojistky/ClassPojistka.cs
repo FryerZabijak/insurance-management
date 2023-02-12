@@ -16,6 +16,10 @@ namespace ConsolePojistky
         {
             get { return _cisloPojistky; }
         }
+        public ClassOsoba Pojistitel
+        {
+            get { return _pojistitel; }
+        }
         public int CilovaCastka
         {
             get { return _cilovaCastka; }
