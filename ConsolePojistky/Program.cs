@@ -14,6 +14,8 @@ namespace ConsolePojistky
 {
     internal class Program
     {
+
+        //Začátek 2. Cvičení
         static Dictionary<ClassPojistka, List<ClassOsoba>> seznamPojistek = new Dictionary<ClassPojistka, List<ClassOsoba>>();
 
         static void Main(string[] args)
@@ -228,6 +230,7 @@ namespace ConsolePojistky
             Console.WriteLine("2..Přidání pojištěné osoby k pojistce");
             Console.WriteLine("3..Výpis všech pojistek");
             Console.WriteLine("4..Výpis údajů konkrétního pojistky vč. pojištěných osob");
+            Console.WriteLine("5..Výpis všech pojistek uzavřených konkrétním pracovníkem");
             Console.WriteLine("U..Uložení do souboru");
             Console.WriteLine("N..Načtení ze souboru");
             Console.WriteLine("K..Konec");
