@@ -33,7 +33,7 @@ namespace ConsolePojistky
                     case '1':
                         {
                             ClassPojistka pojistka = ClassPojistka.VratPojistku();
-                            ClassOsoba pojisteny = ClassOsoba.VratOsobu("Pojištěný");
+                            ClassOsoba pojisteny = ClassOsoba.VratInstanci("Pojištěný");
                             seznamPojistek.Add(pojistka, new List<ClassOsoba> { pojisteny });
                         }
                         break;
@@ -59,7 +59,7 @@ namespace ConsolePojistky
                                 if (seznamPojistek.ContainsKey(klic))
                                 {
                                     List<ClassOsoba> h = seznamPojistek[klic];
-                                    hodnota.Add(ClassOsoba.VratOsobu("Nový Pojištěněc"));
+                                    hodnota.Add(ClassOsoba.VratInstanci("Nový Pojištěněc"));
                                     seznamPojistek[klic] = hodnota;
                                 }
                                 Console.WriteLine("\nNový pojištěnec byl úspěšně přidán do Pojistky " +klic);
@@ -108,7 +108,8 @@ namespace ConsolePojistky
                         Uloz(seznamPojistek);
                         break;
                     case 'N': case 'n':
-                        seznamPojistek = Nacti();
+                        var nactenePojistky = Nacti();
+                        if (nactenePojistky.Count > 0) seznamPojistek = nactenePojistky;
                         break;
                     case 'K': case 'k':
                         chod_programu = false;
@@ -186,6 +187,12 @@ namespace ConsolePojistky
         static Dictionary<ClassPojistka, List<ClassOsoba>> Nacti()
         {
             List<string> finalNazvy = VypisSoubory(Directory.GetCurrentDirectory(),pripona:"dat");
+            if(finalNazvy.Count == 0)
+            {
+                Console.WriteLine("Nejsou zde žádné soubory k načtení.");
+                Pokracovani();
+                return new Dictionary<ClassPojistka, List<ClassOsoba>>();
+            }
 
             int index_souboru = 0;
             do

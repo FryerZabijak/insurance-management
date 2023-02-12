@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 namespace ConsolePojistky
 {
     [Serializable]
-    internal class ClassPojistka
+    sealed internal class ClassPojistka
     {
         string _cisloPojistky;
-        ClassOsoba _pojistitel;
+        ClassPracovnik _pojistitel;
         int _cilovaCastka;
         public string CisloPojistky
         {
             get { return _cisloPojistky; }
         }
-        public ClassOsoba Pojistitel
+        public ClassPracovnik Pojistitel
         {
             get { return _pojistitel; }
         }
@@ -32,7 +32,7 @@ namespace ConsolePojistky
         /// <param name="pojistitel">Zadejte pojistitele typu "ClassOsoba"</param>
         /// <param name="cilovaCastka">Zadejte Cílovou Částku (Musí být vyplněná a kladná)</param>
         /// <exception cref="ArgumentException">Nebyly zadány hodnoty ve vyžádaném formátu</exception>
-        public ClassPojistka(string cisloPojistky, ClassOsoba pojistitel, int cilovaCastka)
+        public ClassPojistka(string cisloPojistky, ClassPracovnik pojistitel, int cilovaCastka)
         {
             if (cisloPojistky.Length < 5) throw new ArgumentException("Číslo pojištění musí mít alespoň 5 znaků");
             if (cilovaCastka.ToString().Length <= 0) throw new ArgumentException("Částka musí být vyplněná");
@@ -46,7 +46,7 @@ namespace ConsolePojistky
 
         public static ClassPojistka VratPojistku()
         {
-            ClassOsoba pojistitel = ClassOsoba.VratOsobu("Pojistitel");
+            ClassPracovnik pojistitel = ClassPracovnik.VratInstanci("Pojistitel");
 
             string cisloPojistky = KontrolorVstupu.ZadavaniOdUzivatele("Číslo Pojistky", "Minimálně 5 znaků", KontrolorVstupu.KontrolaDelky5);
             int cilovaCastka = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Cílová částka", "Musí být číslo, vyplněná a kladná", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla, KontrolorVstupu.KontrolaKladnosti));

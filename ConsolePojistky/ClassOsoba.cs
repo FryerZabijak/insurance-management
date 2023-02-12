@@ -19,7 +19,7 @@ namespace ConsolePojistky
             this.prijmeni = prijmeni;
         }
 
-        public static ClassOsoba VratOsobu(string kdo = "")
+        public static ClassOsoba VratInstanci(string kdo = "")
         {
             string jmeno = KontrolorVstupu.ZadavaniOdUzivatele(kdo + " Jméno", "Nesmí být prázdné", KontrolorVstupu.KontrolaNeprazdnosti);
             string prijemni = KontrolorVstupu.ZadavaniOdUzivatele(kdo + " Příjmení", "Nesmí být prázdné", KontrolorVstupu.KontrolaNeprazdnosti);

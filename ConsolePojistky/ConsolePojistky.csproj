@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="ClassOsoba.cs" />
     <Compile Include="ClassPojistka.cs" />
+    <Compile Include="ClassPracovnik.cs" />
     <Compile Include="KontrolorVstupu.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
