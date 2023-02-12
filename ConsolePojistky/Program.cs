@@ -15,7 +15,7 @@ namespace ConsolePojistky
     internal class Program
     {
         static Dictionary<ClassPojistka, List<ClassOsoba>> seznamPojistek = new Dictionary<ClassPojistka, List<ClassOsoba>>();
-        delegate bool KontrolaZadavani(string line);
+
         static void Main(string[] args)
         {
             bool chod_programu = true;
@@ -43,7 +43,7 @@ namespace ConsolePojistky
                             int index = 0;
                             do
                             {
-                                index = int.Parse(ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla)) - 1;
+                                index = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla)) - 1;
                             } while (!ZkontrolujPlatnostIndexu(index, seznamPojistek.Count));
                             
                             Dictionary < ClassPojistka, List<ClassOsoba>> pojistka = VratPojistkuElement(index, seznamPojistek);
@@ -81,7 +81,7 @@ namespace ConsolePojistky
 
                             int index = 0;
                             do {
-                                index = int.Parse(ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla)) - 1;
+                                index = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla)) - 1;
                             } while (!ZkontrolujPlatnostIndexu(index, seznamPojistek.Count));
 
                                 Dictionary < ClassPojistka, List<ClassOsoba>> pojistka = VratPojistkuElement(index, seznamPojistek);
@@ -146,7 +146,7 @@ namespace ConsolePojistky
             string nazev_souboru = null;
             Console.WriteLine("1. Vybrat existující soubor");
             Console.WriteLine("2. Vytvořit nový soubor");
-            int volba = int.Parse(ZadavaniOdUzivatele("Odpověď", "Musí být neprázdný, číslo", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla));
+            int volba = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Odpověď", "Musí být neprázdný, číslo", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla));
             
             switch (volba)
             {
@@ -162,7 +162,7 @@ namespace ConsolePojistky
                         int index_souboru = 0;
                         do
                         {
-                            index_souboru = int.Parse(ZadavaniOdUzivatele("Číslo názvu souboru pro uložení", "Nesmí být prázdný, číslo", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla)) - 1;
+                            index_souboru = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Číslo názvu souboru pro uložení", "Nesmí být prázdný, číslo", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla)) - 1;
                         } while (ZkontrolujPlatnostIndexu(index_souboru, finalNazvy.Count));
 
                         nazev_souboru = finalNazvy[index_souboru];
@@ -170,7 +170,7 @@ namespace ConsolePojistky
                     break;
                 case 2:
                     {
-                        nazev_souboru = ZadavaniOdUzivatele("Název souboru pro uložení", "Nesmí být prázdný", KontrolorVstupu.KontrolaNeprazdnosti);
+                        nazev_souboru = KontrolorVstupu.ZadavaniOdUzivatele("Název souboru pro uložení", "Nesmí být prázdný", KontrolorVstupu.KontrolaNeprazdnosti);
                     }
                     break;
                 default:
@@ -197,7 +197,7 @@ namespace ConsolePojistky
             int index_souboru = 0;
             do
             {
-                index_souboru = int.Parse(ZadavaniOdUzivatele("Číslo souboru pro načtení", "Nesmí být prázdný, musí být číslo", KontrolorVstupu.KontrolaNeprazdnosti)) - 1;
+                index_souboru = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Číslo souboru pro načtení", "Nesmí být prázdný, musí být číslo", KontrolorVstupu.KontrolaNeprazdnosti)) - 1;
             } while (!KontrolorVstupu.ZkontrolujDelku(index_souboru, finalNazvy.Count) || index_souboru<0);
 
             string nazev_souboru = finalNazvy[index_souboru];
@@ -232,8 +232,8 @@ namespace ConsolePojistky
         {
             ClassOsoba pojistitel = VratOsobu("Pojistitel");
 
-            string cisloPojistky = ZadavaniOdUzivatele("Číslo Pojistky", "Minimálně 5 znaků", KontrolorVstupu.KontrolaDelky5);
-            int cilovaCastka = int.Parse(ZadavaniOdUzivatele("Cílová částka", "Musí být číslo, vyplněná a kladná", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla, KontrolorVstupu.KontrolaKladnosti));
+            string cisloPojistky = KontrolorVstupu.ZadavaniOdUzivatele("Číslo Pojistky", "Minimálně 5 znaků", KontrolorVstupu.KontrolaDelky5);
+            int cilovaCastka = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Cílová částka", "Musí být číslo, vyplněná a kladná", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla, KontrolorVstupu.KontrolaKladnosti));
             ClassPojistka pojistka = new ClassPojistka(cisloPojistky, pojistitel, cilovaCastka);
 
             return pojistka;
@@ -241,8 +241,8 @@ namespace ConsolePojistky
 
         static ClassOsoba VratOsobu(string kdo="")
         {
-            string jmeno = ZadavaniOdUzivatele(kdo + " Jméno", "Nesmí být prázdné", KontrolorVstupu.KontrolaNeprazdnosti);
-            string prijemni= ZadavaniOdUzivatele(kdo + " Příjmení", "Nesmí být prázdné", KontrolorVstupu.KontrolaNeprazdnosti);
+            string jmeno = KontrolorVstupu.ZadavaniOdUzivatele(kdo + " Jméno", "Nesmí být prázdné", KontrolorVstupu.KontrolaNeprazdnosti);
+            string prijemni= KontrolorVstupu.ZadavaniOdUzivatele(kdo + " Příjmení", "Nesmí být prázdné", KontrolorVstupu.KontrolaNeprazdnosti);
             ClassOsoba osoba = new ClassOsoba(jmeno, prijemni);
             return osoba;
         }
@@ -267,37 +267,7 @@ namespace ConsolePojistky
             return element;
         }
 
-        static dynamic ZadavaniOdUzivatele(string nazev = "", string podminky = "", params KontrolaZadavani[] kontroly)
-        {
-            string vstup = null;
-            bool valid = false;
 
-            while (!valid)
-            {
-                if (nazev != "") Console.Write("Nyní zadáváte \"{0}\" ", nazev);
-                if (podminky != "") Console.Write("(Podmínky: {0})", podminky);
-                if (nazev == "" && podminky == "") Console.Write("Zadejte hodnotu");
-                Console.WriteLine();
-                Console.Write("> ");
-                vstup = Console.ReadLine();
-
-
-                valid = true;
-                for (int i = 0; i < kontroly.Length; i++)
-                {
-                    if (!kontroly[i](vstup))
-                    {
-                        valid = false;
-                        break;
-                    }
-                }
-
-                if (!valid)
-                    Console.WriteLine("Neplatný vstup, zadejte prosím znovu.");
-            }
-
-            return vstup;
-        }
 
 
 

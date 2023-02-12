@@ -9,6 +9,8 @@ namespace ConsolePojistky
     static internal class KontrolorVstupu
     {
 
+        public delegate bool KontrolaZadavani(string line);
+
         public static bool KontrolaNeprazdnosti(string line)
         {
             if (line == null || line == "") return false;
@@ -39,6 +41,38 @@ namespace ConsolePojistky
         public static bool ZkontrolujDelku(int input, int delka)
         {
             return input < delka;
+        }
+
+        public static dynamic ZadavaniOdUzivatele(string nazev = "", string podminky = "", params KontrolaZadavani[] kontroly)
+        {
+            string vstup = null;
+            bool valid = false;
+
+            while (!valid)
+            {
+                if (nazev != "") Console.Write("Nyní zadáváte \"{0}\" ", nazev);
+                if (podminky != "") Console.Write("(Podmínky: {0})", podminky);
+                if (nazev == "" && podminky == "") Console.Write("Zadejte hodnotu");
+                Console.WriteLine();
+                Console.Write("> ");
+                vstup = Console.ReadLine();
+
+
+                valid = true;
+                for (int i = 0; i < kontroly.Length; i++)
+                {
+                    if (!kontroly[i](vstup))
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+
+                if (!valid)
+                    Console.WriteLine("Neplatný vstup, zadejte prosím znovu.");
+            }
+
+            return vstup;
         }
 
 
