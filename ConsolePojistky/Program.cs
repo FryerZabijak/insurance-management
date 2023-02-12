@@ -37,12 +37,7 @@ namespace ConsolePojistky
                         break;
                     case '2':
                         {
-                            if (!ClassPojistka.KontrolaNeprazdnostiPojistek(seznamPojistek))
-                            {
-                                Console.WriteLine("Nejsou vytvořeny žádné pojistky");
-                                Pokracovani();
-                                break;
-                            }
+                            if (UpozorneniNaNevytvorenePojistky()) break;
 
                             ClassPojistka.VypisPojistky(seznamPojistek);
 
@@ -52,7 +47,7 @@ namespace ConsolePojistky
                                 index = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla)) - 1;
                             } while (!KontrolorVstupu.ZkontrolujPlatnostIndexu(index, seznamPojistek.Count));
                             
-                            Dictionary < ClassPojistka, List<ClassOsoba>> pojistka = ClassPojistka.VratPojistkuElement(index, seznamPojistek);
+                            Dictionary <ClassPojistka, List<ClassOsoba>> pojistka = ClassPojistka.VratPojistkuElement(index, seznamPojistek);
 
                             foreach (KeyValuePair<ClassPojistka, List<ClassOsoba>> p in pojistka)
                             {
@@ -73,12 +68,8 @@ namespace ConsolePojistky
                         break;
                     case '3':
                         {
-                            if (!ClassPojistka.KontrolaNeprazdnostiPojistek(seznamPojistek))
-                            {
-                                Console.WriteLine("Nejsou vytvořeny žádné pojistky");
-                                Pokracovani();
-                                break;
-                            }
+                            if (UpozorneniNaNevytvorenePojistky()) break;
+
 
                             ClassPojistka.VypisPojistky(seznamPojistek);
                             Pokracovani();
@@ -86,12 +77,7 @@ namespace ConsolePojistky
                         break;
                     case '4':
                         {
-                            if (!ClassPojistka.KontrolaNeprazdnostiPojistek(seznamPojistek))
-                            {
-                                Console.WriteLine("Nejsou vytvořeny žádné pojistky");
-                                Pokracovani();
-                                break;
-                            }
+                            if (UpozorneniNaNevytvorenePojistky()) break;
 
                             ClassPojistka.VypisPojistky(seznamPojistek);
 
@@ -135,6 +121,18 @@ namespace ConsolePojistky
         {
             Console.WriteLine("\nStiskněte Enter pro pokračování...");
             Console.ReadLine();
+        }
+
+        static bool UpozorneniNaNevytvorenePojistky()
+        {
+            if (!ClassPojistka.KontrolaNeprazdnostiPojistek(seznamPojistek))
+            {
+                Console.WriteLine("Nejsou vytvořeny žádné pojistky");
+                Pokracovani();
+                return true;
+            }
+
+            return false;
         }
 
         static void Uloz(Dictionary<ClassPojistka, List<ClassOsoba>> seznam)
