@@ -26,7 +26,7 @@ namespace ConsolePojistky
         {
             if (!KontrolaCisla(line.ToString())) throw new ArgumentException("Nelze provést Kontrolu Kladnosti, z důvodu že zadaná hodnota není číslo");
 
-            if (int.Parse(line) > 0) return true;
+            if (int.Parse(line.ToString()) > 0) return true;
             return false;
         }
 
@@ -35,6 +35,13 @@ namespace ConsolePojistky
             if (line.Length < 5) return false;
             return true;
         }
+
+        public static bool ZkontrolujDelku(int input, int delka)
+        {
+            return input < delka;
+        }
+
+
 
     }
 }

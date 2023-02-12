@@ -39,8 +39,14 @@ namespace ConsolePojistky
                             if (!KontrolaPrazdnostiPojistek(seznamPojistek)) break;
 
                             VypisPojistky(seznamPojistek);
-                            int index = int.Parse(ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla))-1;
-                            Dictionary<ClassPojistka, List<ClassOsoba>> pojistka = VratPojistkuElement(index, seznamPojistek);
+
+                            int index = 0;
+                            do
+                            {
+                                index = int.Parse(ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla)) - 1;
+                            } while (!ZkontrolujPlatnostIndexu(index, seznamPojistek.Count));
+                            
+                            Dictionary < ClassPojistka, List<ClassOsoba>> pojistka = VratPojistkuElement(index, seznamPojistek);
 
                             foreach (KeyValuePair<ClassPojistka, List<ClassOsoba>> p in pojistka)
                             {
@@ -72,8 +78,13 @@ namespace ConsolePojistky
                             if (!KontrolaPrazdnostiPojistek(seznamPojistek)) break;
 
                             VypisPojistky(seznamPojistek);
-                            int index = int.Parse(ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla))-1;
-                            Dictionary<ClassPojistka, List<ClassOsoba>> pojistka = VratPojistkuElement(index, seznamPojistek);
+
+                            int index = 0;
+                            do {
+                                index = int.Parse(ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla)) - 1;
+                            } while (!ZkontrolujPlatnostIndexu(index, seznamPojistek.Count));
+
+                                Dictionary < ClassPojistka, List<ClassOsoba>> pojistka = VratPojistkuElement(index, seznamPojistek);
                             Console.WriteLine("Pojistitel: {0}\n" +
                                 "Číslo Pojistky: {1}\n" +
                                 "Cílová Čáska: {2} CZK", 
@@ -102,6 +113,15 @@ namespace ConsolePojistky
             }
             Console.WriteLine("Děkuji za použití aplikace");
             Pokracovani();
+        }
+
+        static bool ZkontrolujPlatnostIndexu(int index, int delkaPole)
+        {
+            if (!KontrolorVstupu.KontrolaNeprazdnosti(index.ToString())) return false;
+            if (!KontrolorVstupu.KontrolaCisla(index.ToString())) return false;
+            if (index<0) return false;
+            if (!KontrolorVstupu.ZkontrolujDelku(index,delkaPole)) return false;
+            return true;
         }
 
         static bool KontrolaPrazdnostiPojistek(Dictionary<ClassPojistka, List<ClassOsoba>> seznamPojistek)
@@ -139,13 +159,11 @@ namespace ConsolePojistky
                             Pokracovani();
                             return;
                         }
-                        int index_souboru = int.Parse(ZadavaniOdUzivatele("Číslo názvu souboru pro uložení", "Nesmí být prázdný, číslo", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla))-1;
-                        if (!ZkontrolujDelku(index_souboru, finalNazvy.Count))
+                        int index_souboru = 0;
+                        do
                         {
-                            Console.WriteLine("Neplatná volba");
-                            Pokracovani();
-                            return;
-                        }
+                            index_souboru = int.Parse(ZadavaniOdUzivatele("Číslo názvu souboru pro uložení", "Nesmí být prázdný, číslo", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla)) - 1;
+                        } while (ZkontrolujPlatnostIndexu(index_souboru, finalNazvy.Count));
 
                         nazev_souboru = finalNazvy[index_souboru];
                     }
@@ -170,10 +188,7 @@ namespace ConsolePojistky
             Pokracovani();
         }
 
-        static bool ZkontrolujDelku(int input, int delka)
-        {
-            return input < delka;
-        }
+
 
         static Dictionary<ClassPojistka, List<ClassOsoba>> Nacti()
         {
@@ -183,7 +198,7 @@ namespace ConsolePojistky
             do
             {
                 index_souboru = int.Parse(ZadavaniOdUzivatele("Číslo souboru pro načtení", "Nesmí být prázdný, musí být číslo", KontrolorVstupu.KontrolaNeprazdnosti)) - 1;
-            } while (!ZkontrolujDelku(index_souboru, finalNazvy.Count) || index_souboru<0);
+            } while (!KontrolorVstupu.ZkontrolujDelku(index_souboru, finalNazvy.Count) || index_souboru<0);
 
             string nazev_souboru = finalNazvy[index_souboru];
             FileStream fs = new FileStream(nazev_souboru + ".dat", FileMode.Open);
@@ -243,12 +258,6 @@ namespace ConsolePojistky
 
         static Dictionary<ClassPojistka, List<ClassOsoba>> VratPojistkuElement(int index, Dictionary<ClassPojistka, List<ClassOsoba>> seznamPojistek)
         {
-            if (!ZkontrolujDelku(index, seznamPojistek.Count) || !KontrolorVstupu.KontrolaKladnosti(index))
-            {
-                Console.WriteLine("Zadali jste neplatný index");
-                Pokracovani();
-                return new Dictionary<ClassPojistka, List<ClassOsoba>>();
-            }
             ClassPojistka klic = seznamPojistek.ElementAt(index).Key;
             List <ClassOsoba> hodnota = seznamPojistek.ElementAt(index).Value;
             Dictionary<ClassPojistka, List<ClassOsoba>> element = new Dictionary<ClassPojistka, List<ClassOsoba>>
