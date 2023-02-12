@@ -1,4 +1,4 @@
-﻿# ConsolePojistky
+﻿# C# Pojistky
 
 Tento program umožňuje správu pojistek a pojištěnců. Máte možnost přidávat novou pojistku, přidávat nového pojištěnce do již existující pojistky, zobrazit existující pojistky a jejich pojištěnce a ukládat a načítat seznam pojistek.
 
