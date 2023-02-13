@@ -43,7 +43,7 @@ namespace ConsolePojistky
             return input < delka;
         }
 
-        public static dynamic ZadavaniOdUzivatele(string nazev = "", string podminky = "", params KontrolaZadavani[] kontroly)
+        public static dynamic ZadavaniOdUzivatele(string nazev = "", string podminky = "",params KontrolaZadavani[] kontroly)
         {
             string vstup = null;
             bool valid = false;

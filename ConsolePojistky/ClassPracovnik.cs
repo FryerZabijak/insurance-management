@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsolePojistky
 {
+    [Serializable]
     internal class ClassPracovnik : ClassOsoba
     {
         public DateTime DatumNastupu { get; set; }

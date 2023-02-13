@@ -32,9 +32,11 @@ namespace ConsolePojistky
                 {
                     case '1':
                         {
-                            ClassPojistka pojistka = ClassPojistka.VratPojistku();
+                            ClassPojistka pojistka = ClassPojistka.VratPojistku(seznamPojistek);
                             ClassOsoba pojisteny = ClassOsoba.VratInstanci("Pojištěný");
                             seznamPojistek.Add(pojistka, new List<ClassOsoba> { pojisteny });
+
+                            Pokracovani();
                         }
                         break;
                     case '2':
@@ -88,17 +90,42 @@ namespace ConsolePojistky
                                 index = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Pořadové Číslo", "číslo", KontrolorVstupu.KontrolaCisla)) - 1;
                             } while (!KontrolorVstupu.ZkontrolujPlatnostIndexu(index, seznamPojistek.Count));
 
-                                Dictionary < ClassPojistka, List<ClassOsoba>> pojistka = ClassPojistka.VratPojistkuElement(index, seznamPojistek);
+                                Dictionary <ClassPojistka, List<ClassOsoba>> pojistka = ClassPojistka.VratPojistkuElement(index, seznamPojistek);
                             Console.WriteLine("Pojistitel: {0}\n" +
                                 "Číslo Pojistky: {1}\n" +
                                 "Cílová Čáska: {2} CZK", 
-                                pojistka.ElementAt(0).Key.Pojistitel, pojistka.ElementAt(0).Key.CisloPojistky,pojistka.ElementAt(0).Key.CilovaCastka);
+                                pojistka.ElementAt(0).Key.Zpracovatel, pojistka.ElementAt(0).Key.CisloPojistky,pojistka.ElementAt(0).Key.CilovaCastka);
                             foreach(KeyValuePair<ClassPojistka, List<ClassOsoba>> p in pojistka)
                             {
                                 int poradi = 0;
                                 foreach(ClassOsoba osoba in p.Value)
                                 {
                                     Console.WriteLine(++poradi+". "+osoba.ToString());
+                                }
+                            }
+                            Pokracovani();
+                        }
+                        break;
+                    case '5':
+                        {
+                            if (UpozorneniNaNevytvorenePojistky()) break;
+
+                            List<ClassPracovnik> pracovnici = ClassPojistka.ZiskejVsechnyPracovniky(seznamPojistek);
+                            ClassPojistka.VypisList(pracovnici);
+
+                            int index = 0;
+                            do
+                            {
+                                index = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Číslo Pracovníka", "Neprázdné, číslo", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla, KontrolorVstupu.KontrolaKladnosti))-1;
+                            } while (!KontrolorVstupu.ZkontrolujPlatnostIndexu(index, pracovnici.Count));
+
+                            ClassPracovnik finalPracovnik = pracovnici[index];
+
+                            foreach(KeyValuePair<ClassPojistka, List<ClassOsoba>> pojistka in seznamPojistek)
+                            {
+                                if (pojistka.Key.Zpracovatel == finalPracovnik)
+                                {
+                                    Console.WriteLine(pojistka.Key);
                                 }
                             }
                             Pokracovani();
@@ -119,6 +146,8 @@ namespace ConsolePojistky
             Console.WriteLine("Děkuji za použití aplikace");
             Pokracovani();
         }
+
+
 
         public static void Pokracovani()
         {
@@ -160,7 +189,7 @@ namespace ConsolePojistky
                         do
                         {
                             index_souboru = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Číslo názvu souboru pro uložení", "Nesmí být prázdný, číslo", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla)) - 1;
-                        } while (KontrolorVstupu.ZkontrolujPlatnostIndexu(index_souboru, finalNazvy.Count));
+                        } while (!KontrolorVstupu.ZkontrolujPlatnostIndexu(index_souboru, finalNazvy.Count));
 
                         nazev_souboru = finalNazvy[index_souboru];
                     }
@@ -175,15 +204,35 @@ namespace ConsolePojistky
                     Pokracovani();
                     return;
             }
+            char odpoved = 'n';
+            if (SouborExistuje(nazev_souboru + ".dat"))
+            {
+                Console.Write("Soubor s tímto názvem již existuje, přejete si jej přepsat? (a/n)\n> ");
+                odpoved = Console.ReadKey(false).KeyChar;
+            }
+            if (odpoved == 'a')
+            {
 
-            FileStream fs = new FileStream(nazev_souboru+".dat", FileMode.Create);
-            BinaryFormatter bf = new BinaryFormatter();
-            bf.Serialize(fs, seznam);
-            fs.Close();
+                FileStream fs = new FileStream(nazev_souboru + ".dat", FileMode.Create);
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(fs, seznam);
+                fs.Close();
 
-            Console.WriteLine("Data byla úspěšně uložena do souboru {0}.dat",nazev_souboru);
+                Console.WriteLine("Data byla úspěšně uložena do souboru {0}.dat", nazev_souboru);
+            }
+            else
+            {
+                Console.WriteLine("\nSoubor nebyl uložen.");
+            }
             Pokracovani();
         }
+
+        public static bool SouborExistuje(string nazevSouboru)
+        {
+            string cesta = Path.Combine(Directory.GetCurrentDirectory(), nazevSouboru);
+            return File.Exists(cesta);
+        }
+
         static Dictionary<ClassPojistka, List<ClassOsoba>> Nacti()
         {
             List<string> finalNazvy = VypisSoubory(Directory.GetCurrentDirectory(),pripona:"dat");

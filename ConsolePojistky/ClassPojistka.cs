@@ -10,15 +10,15 @@ namespace ConsolePojistky
     sealed internal class ClassPojistka
     {
         string _cisloPojistky;
-        ClassPracovnik _pojistitel;
+        ClassPracovnik _zpracovatel;
         int _cilovaCastka;
         public string CisloPojistky
         {
             get { return _cisloPojistky; }
         }
-        public ClassPracovnik Pojistitel
+        public ClassPracovnik Zpracovatel
         {
-            get { return _pojistitel; }
+            get { return _zpracovatel; }
         }
         public int CilovaCastka
         {
@@ -32,25 +32,84 @@ namespace ConsolePojistky
         /// <param name="pojistitel">Zadejte pojistitele typu "ClassOsoba"</param>
         /// <param name="cilovaCastka">Zadejte Cílovou Částku (Musí být vyplněná a kladná)</param>
         /// <exception cref="ArgumentException">Nebyly zadány hodnoty ve vyžádaném formátu</exception>
-        public ClassPojistka(string cisloPojistky, ClassPracovnik pojistitel, int cilovaCastka)
+        public ClassPojistka(string cisloPojistky, ClassPracovnik zpracovatel, int cilovaCastka)
         {
             if (cisloPojistky.Length < 5) throw new ArgumentException("Číslo pojištění musí mít alespoň 5 znaků");
             if (cilovaCastka.ToString().Length <= 0) throw new ArgumentException("Částka musí být vyplněná");
             if (cilovaCastka < 0) throw new ArgumentException("Částka musí být kladná");
-            if (pojistitel == null) throw new ArgumentNullException("Pojistitel nesmí být prázdný");
+            if (zpracovatel == null) throw new ArgumentNullException("Pojistitel nesmí být prázdný");
 
             _cisloPojistky = cisloPojistky;
-            _pojistitel = pojistitel;
+            _zpracovatel = zpracovatel;
             _cilovaCastka = cilovaCastka;
         }
 
-        public static ClassPojistka VratPojistku()
+        public static List<ClassPracovnik> ZiskejVsechnyPracovniky(Dictionary<ClassPojistka, List<ClassOsoba>> seznamPojistek)
         {
-            ClassPracovnik pojistitel = ClassPracovnik.VratInstanci("Pojistitel");
+            List<ClassPracovnik> pracovnici = new List<ClassPracovnik>();
+            foreach (KeyValuePair<ClassPojistka, List<ClassOsoba>> p in seznamPojistek)
+            {
+                if (pracovnici.Contains(p.Key.Zpracovatel)) continue;
+                pracovnici.Add(p.Key.Zpracovatel);
+            }
+            return pracovnici;
+        }
+
+        public static void VypisList<T>(List<T> list, bool indexace=true, int pocatecniCislo=1)
+        {
+            pocatecniCislo -= 1;
+            foreach(T item in list)
+            {
+                if(indexace) { Console.Write(++pocatecniCislo+". "); }
+                Console.Write(item+"\n");
+            }
+        }
+
+        public static ClassPojistka VratPojistku(Dictionary<ClassPojistka, List<ClassOsoba>> seznamPojistek)
+        {
+            Console.WriteLine("Jakého pracovníka chcete k této pojistce přiřadit?");
+            Console.WriteLine("1. Existujícího pracovníka");
+            Console.WriteLine("2. Vytvořit nového pracovníka");
+            int volba = 0;
+
+            do
+            {
+                volba = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Volba přiřazení pracovníka", "Nesmí být prázdné, číslo", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla, KontrolorVstupu.KontrolaKladnosti).ToString().Substring(0, 1));
+            } while (!KontrolorVstupu.ZkontrolujPlatnostIndexu(volba, 2+1) || volba==0);
+
+            ClassPracovnik pracovnik = new ClassPracovnik("random", "borec");
+
+            if (volba == 1) {
+                Console.WriteLine("Vybral jste možnost vybrat existujícího pracovníka.");
+                List<ClassPracovnik> pracovnici = ZiskejVsechnyPracovniky(seznamPojistek);
+
+                if (pracovnici.Count <= 0)
+                {
+                    Console.WriteLine("Ale v systému nejsou žádní pracovníci, takže vytvoříte nového");
+                    volba = 2;
+                }
+                else
+                {
+                    VypisList(pracovnici);
+
+                    int index = 0;
+                    do
+                    {
+                        index = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Číslo Pracovníka", "Neprázdné, číslo", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla))-1;
+                    } while (!KontrolorVstupu.ZkontrolujPlatnostIndexu(index, pracovnici.Count));
+
+                    pracovnik = pracovnici[index];
+                }
+            }
+            if (volba == 2)
+            {
+                Console.WriteLine("Vytváříte nového pracovníka.");
+                pracovnik = ClassPracovnik.VratInstanci("Pojistitel");
+            }
 
             string cisloPojistky = KontrolorVstupu.ZadavaniOdUzivatele("Číslo Pojistky", "Minimálně 5 znaků", KontrolorVstupu.KontrolaDelky5);
             int cilovaCastka = int.Parse(KontrolorVstupu.ZadavaniOdUzivatele("Cílová částka", "Musí být číslo, vyplněná a kladná", KontrolorVstupu.KontrolaNeprazdnosti, KontrolorVstupu.KontrolaCisla, KontrolorVstupu.KontrolaKladnosti));
-            ClassPojistka pojistka = new ClassPojistka(cisloPojistky, pojistitel, cilovaCastka);
+            ClassPojistka pojistka = new ClassPojistka(cisloPojistky, pracovnik, cilovaCastka);
 
             return pojistka;
         }
